@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import platform.models.CodeSnippet;
 import platform.services.CodeSnippetService;
-import platform.util.Utils;
 
 @Controller
 public class MainController {

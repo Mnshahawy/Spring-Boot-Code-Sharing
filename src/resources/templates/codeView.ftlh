@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 
 <head>
     <title>Code</title>
@@ -7,8 +7,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <span id="load_date" th:text="${date}"></span>
+    <span id="load_date">${date}</span>
     <br>
-    <pre id="code_snippet" th:text="${code}"></pre>
+    <pre id="code_snippet">${code}</pre>
 </body>
 </html>
