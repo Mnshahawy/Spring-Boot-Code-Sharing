@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en-US">
 
 <head>
     <title>Create</title>

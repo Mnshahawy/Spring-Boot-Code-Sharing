@@ -10,3 +10,7 @@
     background-color: lightgrey;
     color: black;
 }
+
+.snippet-container {
+    margin-bottom: 15px;
+}

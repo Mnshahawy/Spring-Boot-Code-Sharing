@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class CodeSnippet {
-    private Long id;
+    //private Long id;
 
     @NotBlank
     private String code;
@@ -18,13 +18,13 @@ public class CodeSnippet {
         this.date = Objects.requireNonNullElseGet(date, () -> Utils.getFormattedDateTime(LocalDateTime.now()));
     }
 
-    public Long getId() {
+    /*public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
+    }*/
 
     public String getCode() {
         return code;
@@ -49,7 +49,7 @@ public class CodeSnippet {
     @Override
     public String toString() {
         return "CodeSnippet{" +
-                "id=" + id +
+                //"id=" + id +
                 ", code='" + code + '\'' +
                 ", date='" + date + '\'' +
                 '}';
