@@ -9,17 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import platform.models.CodeSnippet;
 import platform.services.CodeSnippetService;
-import platform.util.Utils;
-
 import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
-public class MainRestController {
+public class CodeSnippetRestController {
     private final CodeSnippetService codeSnippetService;
 
     @Autowired
-    public MainRestController(CodeSnippetService codeSnippetService){
+    public CodeSnippetRestController(CodeSnippetService codeSnippetService){
         this.codeSnippetService = codeSnippetService;
     }
 

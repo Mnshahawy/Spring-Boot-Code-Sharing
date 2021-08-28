@@ -1,4 +1,4 @@
-package platform.webcontrollers;
+package platform.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,11 +8,11 @@ import platform.models.CodeSnippet;
 import platform.services.CodeSnippetService;
 
 @Controller
-public class MainController {
+public class CodeSnippetController {
     private final CodeSnippetService codeSnippetService;
 
     @Autowired
-    public MainController(CodeSnippetService codeSnippetService){
+    public CodeSnippetController(CodeSnippetService codeSnippetService){
         this.codeSnippetService = codeSnippetService;
     }
 
