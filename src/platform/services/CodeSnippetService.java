@@ -1,41 +1,35 @@
 package platform.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import platform.models.CodeSnippet;
+import platform.repositories.CodeSnippetRepository;
 import platform.util.Utils;
 
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class CodeSnippetService {
-    private final SortedMap<Integer, CodeSnippet> codeSnippetMap;
+    private final CodeSnippetRepository codeSnippetRepository;
 
-    public CodeSnippetService(){
-        this.codeSnippetMap = new TreeMap<>();
+    @Autowired
+    public CodeSnippetService(CodeSnippetRepository codeSnippetRepository){
+        this.codeSnippetRepository = codeSnippetRepository;
     }
 
-    public CodeSnippet getCodeSnippet(int id) {
-        return codeSnippetMap.get(id);
+    public Optional<CodeSnippet> getCodeSnippetById(Long id) {
+        return codeSnippetRepository.findById(id);
     }
 
-    public void addCodeSnippet(CodeSnippet codeSnippet, int id) {
-        codeSnippet.updateDate();
-        this.codeSnippetMap.put(id,codeSnippet);
+    public CodeSnippet addCodeSnippet(CodeSnippet codeSnippet) {
+        return codeSnippetRepository.save(codeSnippet);
     }
 
     public List<CodeSnippet> getLatestTen(){
-        List<CodeSnippet> list = new ArrayList<>();
-        int n = codeSnippetMap.size();
-        int count = 0;
-        for(int i=n; i > 0; i--){
-            list.add(codeSnippetMap.get(i));
-            if(++count == 10)
-                break;
-        }
-        return list;
-    }
-    public int getNextId(){
-        return codeSnippetMap.size() + 1;
+        return codeSnippetRepository.findAllSortByDateDesc(PageRequest.of(0,10));
     }
 }
