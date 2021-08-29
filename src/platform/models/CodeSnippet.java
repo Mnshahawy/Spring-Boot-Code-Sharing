@@ -1,30 +1,44 @@
 package platform.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.CreationTimestamp;
 import platform.util.Utils;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
+
+@Entity
 public class CodeSnippet {
-    //private Long id;
+    @Id
+    @GeneratedValue
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Long id;
 
+    @Column
     @NotBlank
     private String code;
-    private String date;
 
-    public CodeSnippet(String code, String date){
+    @Column(name = "createdAt")
+    @CreationTimestamp
+    @JsonFormat(pattern = Utils.DATE_TIME_FORMAT)
+    private LocalDateTime date;
+
+
+    public CodeSnippet(){}
+    public CodeSnippet(String code){
         this.code = code;
-        this.date = Objects.requireNonNullElseGet(date, () -> Utils.getFormattedDateTime(LocalDateTime.now()));
     }
 
-    /*public Long getId() {
+    public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }*/
+    }
 
     public String getCode() {
         return code;
@@ -34,22 +48,23 @@ public class CodeSnippet {
         this.code = code;
     }
 
-    public String getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public void updateDate(){
-        this.date = Utils.getFormattedDateTime(LocalDateTime.now());
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public String getFormattedDateTime(){
+        return date.format(Utils.DATE_TIME_FORMATTER);
     }
 
     @Override
     public String toString() {
         return "CodeSnippet{" +
-                //"id=" + id +
+                "id=" + id +
                 ", code='" + code + '\'' +
                 ", date='" + date + '\'' +
                 '}';
