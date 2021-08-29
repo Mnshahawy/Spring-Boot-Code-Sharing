@@ -10,9 +10,9 @@ import platform.models.CodeSnippet;
 import platform.services.CodeSnippetService;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class CodeSnippetRestController {
@@ -24,12 +24,12 @@ public class CodeSnippetRestController {
     }
 
     @GetMapping("/api/code/{id}")
-    public ResponseEntity<CodeSnippet> getCodeSnippet(@PathVariable @Min(1) int id) {
-        CodeSnippet codeSnippet = codeSnippetService.getCodeSnippet(id);
-        if(null == codeSnippet){
+    public ResponseEntity<CodeSnippet> getCodeSnippet(@PathVariable @Min(1) long id) {
+        Optional<CodeSnippet> codeSnippet = codeSnippetService.getCodeSnippetById(id);
+        if(codeSnippet.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find Code Snippet with id:" + id);
         }
-        return new ResponseEntity<>(codeSnippet, HttpStatus.OK);
+        return new ResponseEntity<>(codeSnippet.get(), HttpStatus.OK);
     }
 
     @GetMapping("/api/code/latest")
@@ -39,9 +39,8 @@ public class CodeSnippetRestController {
 
     @PostMapping("/api/code/new")
     public ResponseEntity<Map<String, String>> setCodeSnippet(@RequestBody @Valid CodeSnippet codeSnippet) {
-        int id = codeSnippetService.getNextId();
-        codeSnippetService.addCodeSnippet(codeSnippet, id);
-        System.out.println("POST req with CodeSnippet Id: " + id);
-        return new ResponseEntity<>(Map.of("id",String.valueOf(id)),HttpStatus.OK);
+        return new ResponseEntity<>(
+                Map.of("id", String.valueOf(codeSnippetService.addCodeSnippet(codeSnippet).getId())),
+                HttpStatus.OK);
     }
 }
