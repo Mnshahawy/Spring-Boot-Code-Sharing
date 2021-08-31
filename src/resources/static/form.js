@@ -1,16 +1,47 @@
-function send() {
-    let object = {
-        "code": document.getElementById("code_snippet").value
-    };
+window.onload = () => {
+    let form = document.getElementById('code_form');
+    let alertPlaceholder = document.getElementById('alert_placeholder');
 
-    let json = JSON.stringify(object);
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        let data = {}
+        let fd = new FormData(form);
+        for (let [key, prop] of fd) {
+            data[key] = prop;
+        }
+        data = JSON.stringify(data, null, 2);
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", '/api/code/new', false)
-    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-    xhr.send(json);
+        fetch('/api/code/new/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            mode: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: data
+        }).then((response)=> {
+            if (response.ok) {
+                response.json().then((content) => {
+                    alert("Success! We successfully added your code snippet with id: " + content.id, 'success');
+                    form.reset();
+                });
+            } else {
+                alert("Oops! Something went wrong on the server side. HTTP code: " + response.status, 'danger');
+            }
+        });
+    }
 
-    if (xhr.status == 200) {
-        alert("Success!");
+    /** From BootStrap Docs **/
+    function alert(message, type) {
+        let wrapper = document.createElement('div');
+        wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        alertPlaceholder.append(wrapper);
     }
 }
+
+
+
+
+
