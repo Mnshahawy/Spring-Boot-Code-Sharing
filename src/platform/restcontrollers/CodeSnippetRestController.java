@@ -10,6 +10,7 @@ import platform.models.CodeSnippet;
 import platform.services.CodeSnippetService;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class CodeSnippetRestController {
     }
 
     @GetMapping("/api/code/{id}")
-    public ResponseEntity<CodeSnippet> getCodeSnippet(@PathVariable @Min(1) long id) {
+    public ResponseEntity<CodeSnippet> getCodeSnippet(@PathVariable @NotBlank String id) {
         Optional<CodeSnippet> codeSnippet = codeSnippetService.getCodeSnippetById(id);
         if(codeSnippet.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find Code Snippet with id:" + id);
@@ -40,7 +41,7 @@ public class CodeSnippetRestController {
     @PostMapping("/api/code/new")
     public ResponseEntity<Map<String, String>> setCodeSnippet(@RequestBody @Valid CodeSnippet codeSnippet) {
         return new ResponseEntity<>(
-                Map.of("id", String.valueOf(codeSnippetService.addCodeSnippet(codeSnippet).getId())),
+                Map.of("id", codeSnippetService.addCodeSnippet(codeSnippet).getId().toString()),
                 HttpStatus.OK);
     }
 }

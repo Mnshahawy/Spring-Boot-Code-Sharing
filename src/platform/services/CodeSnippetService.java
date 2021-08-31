@@ -6,10 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import platform.models.CodeSnippet;
 import platform.repositories.CodeSnippetRepository;
-import platform.util.Utils;
-
-import java.awt.print.Pageable;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -21,15 +17,31 @@ public class CodeSnippetService {
         this.codeSnippetRepository = codeSnippetRepository;
     }
 
-    public Optional<CodeSnippet> getCodeSnippetById(Long id) {
-        return codeSnippetRepository.findById(id);
+    public Optional<CodeSnippet> getCodeSnippetById(String id) {
+        Optional<CodeSnippet> optional = codeSnippetRepository.findById(UUID.fromString(id));
+        if(optional.isPresent()){
+            CodeSnippet codeSnippet = optional.get();
+            if(codeSnippet.updateRestricted()){
+                //Here we should remove the snippet
+                codeSnippetRepository.delete(codeSnippet);
+                //If we reached expiration time, we return 404
+                if(codeSnippet.isExpired())
+                    return Optional.empty();
+                codeSnippet.setLastView(true);
+            }else{
+                //Update the snippet
+                codeSnippetRepository.save(codeSnippet);
+            }
+        }
+        return optional;
     }
 
     public CodeSnippet addCodeSnippet(CodeSnippet codeSnippet) {
+        codeSnippet.setRestricted();
         return codeSnippetRepository.save(codeSnippet);
     }
 
     public List<CodeSnippet> getLatestTen(){
-        return codeSnippetRepository.findAllSortByDateDesc(PageRequest.of(0,10));
+        return codeSnippetRepository.findAllNonRestrictedSortByDateDesc(PageRequest.of(0,10));
     }
 }

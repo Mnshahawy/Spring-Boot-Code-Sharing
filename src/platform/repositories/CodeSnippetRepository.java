@@ -7,9 +7,13 @@ import org.springframework.stereotype.Repository;
 import platform.models.CodeSnippet;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface CodeSnippetRepository extends CrudRepository<CodeSnippet, Long> {
+public interface CodeSnippetRepository extends CrudRepository<CodeSnippet, UUID> {
     @Query("SELECT C FROM CodeSnippet C ORDER BY C.date DESC")
     List<CodeSnippet> findAllSortByDateDesc(Pageable pageable);
+
+    @Query("SELECT C FROM CodeSnippet C WHERE C.restricted = 0 ORDER BY C.date DESC")
+    List<CodeSnippet> findAllNonRestrictedSortByDateDesc(Pageable pageable);
 }

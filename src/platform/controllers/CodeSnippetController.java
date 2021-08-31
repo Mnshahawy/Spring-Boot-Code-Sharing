@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 import platform.models.CodeSnippet;
 import platform.services.CodeSnippetService;
-import platform.util.Utils;
-
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +26,16 @@ public class CodeSnippetController {
 
     @Validated
     @GetMapping("/code/{id}")
-    public String getCode(@PathVariable @Min(1) long id, Model model) {
+    public String getCode(@PathVariable @NotBlank String id, Model model) {
         Optional<CodeSnippet> codeSnippetOpt = codeSnippetService.getCodeSnippetById(id);
         if(codeSnippetOpt.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find Code Snippet with id:" + id);
         }
         CodeSnippet codeSnippet = codeSnippetOpt.get();
         model.addAttribute("code", codeSnippet.getCode());
+        model.addAttribute("time", codeSnippet.getTime());
+        model.addAttribute("views",codeSnippet.getViews());
+        model.addAttribute("isLastView", codeSnippet.isLastView());
         model.addAttribute("date", codeSnippet.getFormattedDateTime());
         return "codeView";
     }
