@@ -14,6 +14,6 @@ public interface CodeSnippetRepository extends CrudRepository<CodeSnippet, UUID>
     @Query("SELECT C FROM CodeSnippet C ORDER BY C.date DESC")
     List<CodeSnippet> findAllSortByDateDesc(Pageable pageable);
 
-    @Query("SELECT C FROM CodeSnippet C WHERE C.restricted = 0 ORDER BY C.date DESC")
+    @Query("SELECT C FROM CodeSnippet C WHERE C.isViewsRestricted = false AND C.isTimeRestricted = false ORDER BY C.date DESC")
     List<CodeSnippet> findAllNonRestrictedSortByDateDesc(Pageable pageable);
 }

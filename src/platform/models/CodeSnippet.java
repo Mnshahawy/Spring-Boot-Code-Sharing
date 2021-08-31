@@ -1,6 +1,7 @@
 package platform.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -15,12 +16,6 @@ import java.util.UUID;
 
 @Entity
 public class CodeSnippet {
-    private enum RESTRICTIONS {
-        NONE,
-        TIME_RESTRICTED,
-        VIEWS_RESTRICTED,
-        TIME_AND_VIEWS_RESTRICTED
-    }
     @Id
     @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -41,38 +36,20 @@ public class CodeSnippet {
     @Column
     private long views;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Transient
-    private boolean isLastView;
+    @Column
+    @JsonIgnore
+    private boolean isViewsRestricted;
+
+    @Column
+    @JsonIgnore
+    private boolean isTimeRestricted;
 
     //Helper field to retain expiration time of a snippet
     @Column
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private LocalDateTime expires;
 
-    /**
-        Since the Snippet can be time-restricted or views-restricted or both,
-        it's better to have a redundant field to identify the type of restriction
-        This will help to optimize our queries and the process to update restrictions
-        I will be using the following codes:
-        No restriction = 0
-        time-restricted = 1
-        views-restricted = 2
-        time-and-views-restricted = 3
-        These are the ordinal values of the RESTRICTIONS enum
-     */
-    @Column
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private int restricted;
-
-    public CodeSnippet(){
-        //this.id = UUID.randomUUID().toString();
-    }
-
-    public CodeSnippet(String code){
-        //this();
-        this.code = code;
-    }
+    public CodeSnippet(){}
 
     public UUID getId() {
         return id;
@@ -124,52 +101,42 @@ public class CodeSnippet {
         return expires;
     }
 
-    public void setRestricted(){
-        RESTRICTIONS restrictions = RESTRICTIONS.NONE;
+    public void setRestrictions(){
         if(time > 0 && views > 0){
             expires = LocalDateTime.now().plusSeconds(time);
-            restrictions = RESTRICTIONS.TIME_AND_VIEWS_RESTRICTED;
+            isTimeRestricted = true;
+            isViewsRestricted = true;
         }else if(time > 0){
             expires = LocalDateTime.now().plusSeconds(time);
-            restrictions = RESTRICTIONS.TIME_RESTRICTED;
+            isTimeRestricted = true;
         }else if(views > 0){
-            restrictions = RESTRICTIONS.VIEWS_RESTRICTED;
+            isViewsRestricted = true;
         }
-        this.restricted = restrictions.ordinal();
     }
 
-    public int getRestricted() {
-        return restricted;
-    }
-
-    public boolean updateRestricted(){
-        RESTRICTIONS restrictions = RESTRICTIONS.values()[restricted];
+    public boolean isDeletionRequiredAfterRestrictionsUpdate(){
         boolean requiresDeletion = false;
-        switch (restrictions){
-            case TIME_RESTRICTED:
-                updateTime();
-                if(time <= 0 ) {
-                    requiresDeletion = true;
-                }
-                break;
-            case VIEWS_RESTRICTED:
-                views--;
-                if(views <= 0 ) {
-                    requiresDeletion = true;
-                }
-                break;
-            case TIME_AND_VIEWS_RESTRICTED:
-                updateTime();
-                views--;
-                if(time <= 0 || views <= 0 ) {
-                    requiresDeletion = true;
-                }
-                break;
+        if(isViewsRestricted && isTimeRestricted){
+            updateTime();
+            views--;
+            if(time <= 0 || views <= 0 ) {
+                requiresDeletion = true;
+            }
+        } else if(isViewsRestricted){
+            views--;
+            if(views <= 0 ) {
+                requiresDeletion = true;
+            }
+        }else if(isTimeRestricted){
+            updateTime();
+            if(time <= 0 ) {
+                requiresDeletion = true;
+            }
         }
         return requiresDeletion;
     }
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     public boolean isExpired(){
         if(null == expires) return false;
         return LocalDateTime.now().isAfter(expires);
@@ -183,23 +150,28 @@ public class CodeSnippet {
         this.views = views;
     }
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public boolean isLastView() {
-        return isLastView;
+    public boolean isViewsRestricted() {
+        return isViewsRestricted;
     }
 
-    public void setLastView(boolean lastView) {
-        isLastView = lastView;
+    public void setViewsRestricted(boolean viewsRestricted) {
+        isViewsRestricted = viewsRestricted;
+    }
+
+    public boolean isTimeRestricted() {
+        return isTimeRestricted;
+    }
+
+    public void setTimeRestricted(boolean timeRestricted) {
+        isTimeRestricted = timeRestricted;
     }
 
     @Override
     public String toString() {
         return "CodeSnippet{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", date='" + date + '\'' +
+                "code='" + code + '\'' +
+                ", time=" + time +
+                ", views=" + views +
                 '}';
     }
-
-
 }

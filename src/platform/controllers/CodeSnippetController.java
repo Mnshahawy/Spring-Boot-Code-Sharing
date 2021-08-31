@@ -35,7 +35,8 @@ public class CodeSnippetController {
         model.addAttribute("code", codeSnippet.getCode());
         model.addAttribute("time", codeSnippet.getTime());
         model.addAttribute("views",codeSnippet.getViews());
-        model.addAttribute("isLastView", codeSnippet.isLastView());
+        model.addAttribute("isViewsRestricted", codeSnippet.isViewsRestricted());
+        model.addAttribute("isTimeRestricted", codeSnippet.isTimeRestricted());
         model.addAttribute("date", codeSnippet.getFormattedDateTime());
         return "codeView";
     }
