@@ -1,4 +1,4 @@
-#Code Sharing Platform Using Spring Framework
+# Code Sharing Platform Using Spring Framework
 
 This project is part of the Java Backend Developer track as offered on JetBrains Academy. 
 The platform is intended to achieve the following objectives:
@@ -6,7 +6,7 @@ The platform is intended to achieve the following objectives:
 **The following is the project description and objectives as seen on JetBrains Academy 
 followed by test results from my implementations**
 
-##Description
+## Description
 
 Programming is full of little secrets. Sometimes, even within the same company, there is some secret code that should be hidden from most of the colleagues. This piece of code should only be available to certain people, and it may be deleted in the future to hide the traces.
 
@@ -21,7 +21,7 @@ Obviously, the hidden pieces of code should not be shown on the `GET /code/lates
 
 If you are a true spy, you might object: if all the links have numeric identifiers, can't we find the secret snippets just by looking through the different numbers? Indeed, it is quite easy to access secret links this way. To avoid this, let's generate links not with consecutive numbers but with UUID's (Universally Unique IDentifiers). To implement this, see a tutorial on generating the UUID. Now, no snippets can be obtained without a direct link!
 
-##Objectives
+## Objectives
 
 In this stage, your program should support the same endpoints as in the previous stage. Here is what's going to be different:
 
@@ -47,14 +47,14 @@ Code snippets should be accessible via UUID links. `POST /api/code/new` should r
    
 *Note: if only one of the restrictions is applied, you should show only one of the above elements.*
 
-##Web Testing Output
+## Web Testing Output
 The following is the output for the three main views in the project. I will be adding results for the REST API testing as well.
 1. The latest view
 
    <img src="./screenshots/latest_snippets.png" alt="The latest snippets view" width="400"/>
 2. The code view
 
-   <img src="./screenshots/view_snippet.png.png" alt="The single snippet view" width="400"/>
+   <img src="./screenshots/view_snippet.png" alt="The single snippet view" width="400"/>
 3. The create view
 
-   <img src="./screenshots/create_snippet.png.png" alt="The view for adding new snippets" width="400"/>
+   <img src="./screenshots/create_snippet.png" alt="The view for adding new snippets" width="400"/>
