@@ -51,10 +51,10 @@ Code snippets should be accessible via UUID links. `POST /api/code/new` should r
 The following is the output for the three main views in the project. I will be adding results for the REST API testing as well.
 1. The latest view
 
-   <img src="./screenshots/latest_snippets.png" alt="The latest snippets view" width="400"/>
+   <img src="./screenshots/latest_snippets.png" alt="The latest snippets view" width="600"/>
 2. The code view
 
-   <img src="./screenshots/view_snippet.png" alt="The single snippet view" width="400"/>
+   <img src="./screenshots/view_snippet.png" alt="The single snippet view" width="600"/>
 3. The create view
 
-   <img src="./screenshots/create_snippet.png" alt="The view for adding new snippets" width="400"/>
+   <img src="./screenshots/create_snippet.png" alt="The view for adding new snippets" width="600"/>
