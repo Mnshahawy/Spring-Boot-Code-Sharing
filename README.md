@@ -1,7 +1,6 @@
 # Code Sharing Platform Using Spring Framework
 
 This project is part of the Java Backend Developer track as offered on JetBrains Academy. 
-The platform is intended to achieve the following objectives:
 
 **The following is the project description and objectives as seen on JetBrains Academy 
 followed by test results from my implementations**
